@@ -1,0 +1,47 @@
+MODELLO — Note legali (integrare con i dati dell'ente e far revisionare al responsabile legale)
+
+---
+
+1. Titolare del sito
+
+Il presente sito istituzionale e di proprieta di [DENOMINAZIONE ENTE], con sede in [INDIRIZZO], C.F./P.IVA [CODICE].
+Per ogni comunicazione: [EMAIL / PEC].
+
+2. Contenuti e responsabilita
+
+I contenuti testuali, documentali e multimediali pubblicati (notizie, atti, dataset, allegati) sono curati dall'ente salvo diversa indicazione.
+L'ente non risponde di eventuali malfunzionamenti dovuti a indisponibilita dei sistemi, manutenzione o cause di forza maggiore.
+
+3. Software e tema grafico
+
+Il sito utilizza il CMS open source WordPress (licenza GPL).
+
+Il tema grafico ItaliaWP3 e un'opera derivata del tema open source ItaliaWP2 (licenza GNU GPL v3 o successiva), Copyright (c) 2018-2021 Boris Amico, con personalizzazioni Copyright (c) Asymmetrica (opendata@asymmetrica.it) per le funzionalita open data.
+
+L'autore originale dei template ItaliaWP e ItaliaWP2 (Boris Amico) non e responsabile dell'uso che gli utilizzatori ne fanno ne dei contenuti pubblicati su questo portale, come indicato sul sito ufficiale del progetto: https://italiawp.borisamico.it/v2/
+
+Asymmetrica fornisce personalizzazioni tecniche del tema e, ove applicabile, del plugin Open Data PA; non e responsabile dei contenuti editoriali dell'ente ne di decisioni organizzative sulla pubblicazione dei dati.
+
+Il plugin Open Data PA, ove installato, e software distinto distribuito sotto licenza GPL v3; eventuali abbonamenti per assistenza o aggiornamenti ufficiali non limitano l'uso delle funzionalita del codice open source.
+
+4. Design e linee guida AgID
+
+L'interfaccia e ispirata a Bootstrap Italia e alle linee guida di design per la PA. L'adozione di tali componenti non costituisce attestazione o certificazione da parte di AgID o del Team per la trasformazione digitale.
+
+5. Dati aperti e licenze di riutilizzo
+
+I dataset pubblicati nel catalogo open data sono resi disponibili alle condizioni indicate nella scheda di ciascun dataset (es. Creative Commons Attribuzione 4.0 — CC BY 4.0), salvo diversa licenza esplicitamente indicata nei metadati.
+Per riutilizzo commerciale o integrazione in altri sistemi, rispettare la licenza applicata a ogni risorsa.
+
+6. Link esterni
+
+Link a siti di terze parti sono forniti per utilita dell'utente; l'ente non controlla ne garantisce contenuti, privacy policy o accessibilita di siti esterni.
+
+7. Proprieta intellettuale
+
+Salvo dove diversamente specificato, i contenuti originali del sito sono di proprieta dell'ente o concessi in licenza ai titolari indicati.
+Il codice del tema derivato e del plugin, ove open source, e utilizzabile secondo le rispettive licenze GPL; resta obbligatoria la conservazione delle note di copyright previste dalle licenze.
+
+8. Aggiornamento
+
+Ultimo aggiornamento del presente testo: [DATA].
