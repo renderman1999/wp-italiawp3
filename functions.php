@@ -450,11 +450,11 @@ function my_excerpt($excerpt = '') {
 
 add_filter('get_the_excerpt', 'my_excerpt');
 
-/* UPDATER THEME VERSION */
+/* UPDATER THEME VERSION (canale ufficiale wp-italiawp3, non ItaliaWP2 upstream) */
 require 'inc/theme-update-checker.php';
 $update_checker = new ThemeUpdateChecker(
-        'italiawp2',
-        'https://raw.githubusercontent.com/italia/design-wordpress-theme-italiaWP2/master/italiawp2.json'
+	'italiawp3',
+	'https://raw.githubusercontent.com/renderman1999/wp-italiawp3/main/italiawp3.json'
 );
 
 /* Per la ricerca manuale degli aggiornamenti, altrimenti avviene automaticamente ogni 12 ore */

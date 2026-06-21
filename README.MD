@@ -68,12 +68,12 @@ Modello testuale per la pagina "Note legali" dell'ente: vedi [note-legali-modell
 ## Installazione
 
 ```bash
-git clone https://github.com/renderman1999/wp-italiawp3.git italiawp2
+git clone https://github.com/renderman1999/wp-italiawp3.git wp-content/themes/italiawp3
 ```
 
-Copia (o clona direttamente) in `wp-content/themes/italiawp2/` — lo **slug cartella** deve restare `italiawp2` (text domain del tema).
+La cartella del tema deve chiamarsi **`italiawp3`** (slug WordPress). Il text domain resta `italiawp2` per compatibilita traduzioni upstream.
 
-1. Copiare la cartella del tema in `wp-content/themes/italiawp2`.
+1. Clonare o copiare il tema in `wp-content/themes/italiawp3/`.
 2. Attivare il tema da **Aspetto > Temi**.
 3. Configurare **Dettagli**, menu e personalizzazione come per ItaliaWP2 (vedi documentazione upstream).
 4. Installare e attivare il plugin **Open Data PA** per catalogo e dataset.
