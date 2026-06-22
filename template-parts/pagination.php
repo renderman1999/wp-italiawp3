@@ -18,29 +18,26 @@
                                                     </svg>
                                                     <span class="sr-only">'.__('Previous page','italiawp2').'</span>'); ?>
             </li>
-        <?php 
-            if($paged) {
-                $pages = paginate_links(array(
-                    'total' => $wp_query->max_num_pages,
-                    'current' => max(1, get_query_var('paged')),
-                    'show_all' => false,
-                    'end_size' => 1,
-                    'mid_size' => 1,
+        <?php
+            $current_page = max( 1, (int) get_query_var( 'paged' ) );
+            $pages        = paginate_links(
+                array(
+                    'total'     => $wp_query->max_num_pages,
+                    'current'   => $current_page,
+                    'show_all'  => false,
+                    'end_size'  => 1,
+                    'mid_size'  => 1,
                     'prev_next' => false,
-                    'before_page_number' => '',
-                    'after_page_number' => '',
-                    'type' => 'array'
-                ));
+                    'type'      => 'array',
+                )
+            );
 
-                if(is_array($pages)) {
-                    $paged = ( get_query_var('paged') == 0 ) ? 1 : get_query_var('paged');
-                    foreach ($pages as $page) {
-                        if(get_query_var('paged') != 1) {
-                            echo '<li class="page-item">'.$page.'</li>';
-                        }
-                    }
+            if ( is_array( $pages ) ) {
+                foreach ( $pages as $page ) {
+                    echo '<li class="page-item">' . $page . '</li>';
                 }
-            } ?>
+            }
+        ?>
             <li class="page-item">
                 <?php echo get_next_posts_link('<svg class="icon">
                   <use xlink:href="'. esc_url( get_template_directory_uri() ).'/static/img/bootstrap-italia.svg#it-chevron-right"></use>

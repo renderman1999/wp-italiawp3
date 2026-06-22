@@ -241,17 +241,15 @@
                 <?php if(get_option('dettagli-link-accessibilita')!=""): ?>
                     <a target="_blank" href="<?php echo esc_url(get_option('dettagli-link-accessibilita') ); ?>" data-element="accessibility-link" title="<?php echo __('Accessibility','italiawp2'); ?>"><?php echo __('Accessibility','italiawp2'); ?></a> |
                 <?php endif; ?>
-                <?php echo __('Made with','italiawp2'); ?> <a target="_blank" href="https://it.wordpress.org">WordPress</a> |
-                
                 <!-- Per favore, non rimuoverlo! -->
-                <?php $main_theme = wp_get_theme( get_template() ); ?>
-                <?php echo esc_html__( 'Graphic theme', 'italiawp2' ); ?>
-                <a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $main_theme->get( 'ThemeURI' ) ); ?>"><?php echo esc_html( $main_theme->get( 'Name' ) ); ?></a> |
-                <?php echo esc_html__( 'Derived from', 'italiawp2' ); ?>
-                <a target="_blank" rel="noopener noreferrer" href="https://italiawp.borisamico.it/v2/">ItaliaWP2</a> (Boris Amico) |
-                <?php echo esc_html__( 'Open Data customizations', 'italiawp2' ); ?> Asymmetrica |
-                <?php echo esc_html__( 'Based on the', 'italiawp2' ); ?>
-                <a target="_blank" rel="noopener noreferrer" href="https://italia.github.io/design-comuni-prototipi/"><?php echo esc_html__( 'AgID Prototype for PA sites', 'italiawp2' ); ?></a>
+                <button
+                    type="button"
+                    class="footer-credits-trigger"
+                    data-toggle="modal"
+                    data-target="#italiawp3-footer-credits-modal"
+                >
+                    <?php esc_html_e( 'Credits', 'italiawp2' ); ?>
+                </button>
                 <!-- Grazie :) -->
 
                 <br>

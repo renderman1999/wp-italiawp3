@@ -65,9 +65,9 @@
                                 </h4>
                                 <small><p><?php echo $datapost; ?></p></small>
                                 <p><?php echo get_the_excerpt(); ?></p>
-                                <a aria-label="<?php echo __('Read more','italiawp2'); ?> - <?php echo __('Go to the page','italiawp2'); ?>: <?php the_title(); ?>"
-                                   href="<?php the_permalink(); ?>" title="<?php the_title(); ?>" class="tutte">
-                                    <?php echo __('Read more','italiawp2'); ?>
+                                <a aria-label="<?php echo esc_attr( italiawp2_opendata_loop_action_label( get_the_ID() ) . ' - ' . sprintf( __( 'Go to the page', 'italiawp2' ) . ': %s', get_the_title() ) ); ?>"
+                                   href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" class="tutte">
+                                    <?php echo esc_html( function_exists( 'italiawp2_opendata_loop_action_label' ) ? italiawp2_opendata_loop_action_label() : __( 'Read more', 'italiawp2' ) ); ?>
                                     <svg class="icon">
                                         <use xlink:href="<?php echo esc_url( get_template_directory_uri() ); ?>/static/img/ponmetroca.svg#ca-arrow_forward"></use>
                                     </svg>

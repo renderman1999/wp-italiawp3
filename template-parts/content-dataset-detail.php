@@ -49,9 +49,8 @@ $archive_url = get_post_type_archive_link( OpenData_Pa_Dataset::POST_TYPE );
 $archive_label = __( 'Area dataset', 'italiawp2' );
 ?>
 
-<section id="dataset-detail" class="section dataset-detail-section" style="padding-top: 40px;">
-	<div class="container"  >
-	 
+<section id="dataset-detail" class="section dataset-detail-section">
+	<div class="container-fluid dataset-detail-container">
 
 		<!-- Card: Titolo e punteggio metadati -->
 		<div class="card card-wrapper border shadow-sm mb-4 dataset-detail-card">
@@ -369,5 +368,7 @@ $archive_label = __( 'Area dataset', 'italiawp2' );
 			endif;
 		endif;
 		?>
+
+		<?php italiawp3_render_dataset_share_block( $post_id ); ?>
 	</div>
 </section>

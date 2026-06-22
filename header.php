@@ -34,6 +34,8 @@
         </ul>
     </div>
         
+    <?php italiawp3_render_site_notices(); ?>
+
     <header id="mainheader" class="u-background-50">
     <?php get_template_part('menu'); ?>
     </header>

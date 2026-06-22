@@ -30,9 +30,10 @@
                         $menu = array(
                             'theme_location' => 'menu-alto',
                             'menu_id' => 'menu-alto',
-                            'menu_class' => ''
+                            'menu_class' => '',
+                            'echo' => false
                         );
-                        echo strip_tags(wp_nav_menu($menu)); ?>
+                        echo strip_tags((string) wp_nav_menu($menu)); ?>
                     </div>
                     <?php } ?>
                     
@@ -81,8 +82,9 @@
                             'menu_id' => 'site-navigation',
                             'menu_class' => 'nav navmenu',
                             'items_wrap' => '<ul id="%1$s" class="%2$s" data-element="menu">%3$s</ul>',
+                            'echo' => false
                         );
-                        echo strip_tags(wp_nav_menu($menu));
+                        echo strip_tags((string) wp_nav_menu($menu));
                     }
              ?>
         

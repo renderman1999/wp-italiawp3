@@ -298,10 +298,14 @@ function tags_support_query($wp_query) {
 require get_template_directory() . '/inc/class-wp-bootstrap-navwalker.php';
 require get_template_directory() . '/inc/enqueue.php';
 require get_template_directory() . '/inc/opendata-catalog.php';
+require get_template_directory() . '/inc/dataset-slider-ajax.php';
+require get_template_directory() . '/inc/footer-credits.php';
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/style.php';
 require get_template_directory() . '/inc/gallery.php';
 require get_template_directory() . '/inc/details.php';
+require get_template_directory() . '/inc/notices.php';
+require get_template_directory() . '/inc/dataset-share.php';
 
 // Custom Functions
 function italiawp2_custom_login_logo() {

@@ -50,7 +50,8 @@ $tag_counts = function_exists( 'italiawp2_opendata_catalog_dataset_tag_counts' )
 			<aside class="col-lg-4 col-md-12 mb-4 mb-lg-0">
 				<div class="opendata-catalog-filters card card-wrapper border-0 shadow-sm">
 					<div class="card-body">
-						<h3 class="h6 mb-3"><?php esc_html_e( 'Filtra e ordina', 'italiawp2' ); ?></h3>
+						<h3 class="h6 mb-2"><?php esc_html_e( 'Filtra e ordina', 'italiawp2' ); ?></h3>
+						<div id="opendata-catalog-active-filters" class="opendata-catalog-active-filters mb-3" hidden aria-live="polite"></div>
 
 						<div class="mb-3">
 							<label for="opendata_s" class="form-label"><?php esc_html_e( 'Per titolo e descrizione', 'italiawp2' ); ?></label>
@@ -158,11 +159,7 @@ $tag_counts = function_exists( 'italiawp2_opendata_catalog_dataset_tag_counts' )
 			<div class="col-lg-8 col-md-12">
 				<div id="opendata-catalog-results" class="opendata-catalog-results" aria-live="polite" aria-busy="false">
 					<div class="opendata-catalog-results-inner">
-						<?php echo italiawp2_opendata_catalog_results_html( $query, $p ); ?>
-					</div>
-					<div class="opendata-catalog-loader-overlay" aria-hidden="true">
-						<div class="spinner-border text-white" style="width:3rem;height:3rem;" role="status">
- 						</div>
+						<?php echo italiawp2_opendata_catalog_results_html( $query, $p ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
 				</div>
 			</div>

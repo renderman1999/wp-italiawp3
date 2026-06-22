@@ -342,6 +342,159 @@ function italiawp2_opendata_catalog_query_args( $p ) {
 }
 
 /**
+ * HTML skeleton risultati catalogo (caricamento / filtri AJAX).
+ *
+ * @param int $count Numero card placeholder.
+ * @return string
+ */
+function italiawp2_opendata_catalog_results_skeleton_html( $count = 4 ) {
+	$count = max( 1, min( 6, (int) $count ) );
+	ob_start();
+	?>
+	<p class="opendata-catalog-count text-white mb-3 opendata-catalog-skeleton-count" aria-hidden="true">
+		<span class="opendata-catalog-skeleton-line opendata-catalog-skeleton-line--short"></span>
+	</p>
+	<div class="opendata-catalog-list">
+		<?php for ( $i = 0; $i < $count; $i++ ) : ?>
+			<article class="opendata-catalog-item opendata-catalog-skeleton card card-wrapper border-0 shadow-sm mb-3" aria-hidden="true">
+				<div class="card-body">
+					<div class="opendata-catalog-skeleton-line opendata-catalog-skeleton-line--title"></div>
+					<div class="opendata-catalog-skeleton-line opendata-catalog-skeleton-line--text opendata-catalog-skeleton-line--w90"></div>
+					<div class="opendata-catalog-skeleton-line opendata-catalog-skeleton-line--text opendata-catalog-skeleton-line--w75"></div>
+					<div class="opendata-catalog-skeleton-line opendata-catalog-skeleton-line--meta"></div>
+					<div class="opendata-catalog-skeleton-line opendata-catalog-skeleton-line--meta opendata-catalog-skeleton-line--w40"></div>
+					<div class="opendata-catalog-skeleton-badges">
+						<span class="opendata-catalog-skeleton-pill"></span>
+						<span class="opendata-catalog-skeleton-pill opendata-catalog-skeleton-pill--wide"></span>
+						<span class="opendata-catalog-skeleton-pill"></span>
+					</div>
+				</div>
+			</article>
+		<?php endfor; ?>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Etichetta azione nel loop (archivio/ricerca): "Apri dataset" per i dataset, altrimenti "Leggi di più".
+ *
+ * @param int $post_id ID post; default post corrente.
+ * @return string
+ */
+function italiawp2_opendata_loop_action_label( $post_id = 0 ) {
+	$post_id = $post_id ? (int) $post_id : get_the_ID();
+	$is_dataset = ( class_exists( 'OpenData_Pa_Dataset' ) && get_post_type( $post_id ) === OpenData_Pa_Dataset::POST_TYPE )
+		|| get_post_type( $post_id ) === 'opendata_dataset';
+
+	if ( $is_dataset ) {
+		return __( 'Apri dataset', 'italiawp2' );
+	}
+
+	return __( 'Read more', 'italiawp2' );
+}
+
+/**
+ * Ricerca limitata al post type dataset (es. /dataset/?s=...&post_type=opendata_dataset).
+ *
+ * @return bool
+ */
+function italiawp2_is_opendata_dataset_search() {
+	if ( ! is_search() ) {
+		return false;
+	}
+
+	$post_type = get_query_var( 'post_type' );
+	if ( $post_type === 'opendata_dataset' ) {
+		return true;
+	}
+	if ( is_array( $post_type ) && in_array( 'opendata_dataset', $post_type, true ) ) {
+		return true;
+	}
+	if ( isset( $_GET['post_type'] ) ) {
+		return sanitize_key( wp_unslash( $_GET['post_type'] ) ) === 'opendata_dataset';
+	}
+
+	return false;
+}
+
+/**
+ * HTML card singolo dataset (catalogo e ricerca archivio).
+ *
+ * @param int $dataset_id ID post dataset; default post corrente nel loop.
+ * @return string
+ */
+function italiawp2_opendata_dataset_card_html( $dataset_id = 0 ) {
+	$dataset_id = $dataset_id ? (int) $dataset_id : get_the_ID();
+	if ( ! $dataset_id || ! class_exists( 'OpenData_Pa_Dataset' ) ) {
+		return '';
+	}
+	if ( get_post_type( $dataset_id ) !== OpenData_Pa_Dataset::POST_TYPE ) {
+		return '';
+	}
+
+	$post_obj = get_post( $dataset_id );
+	if ( ! $post_obj instanceof WP_Post ) {
+		return '';
+	}
+
+	$title         = get_the_title( $dataset_id );
+	$permalink     = get_permalink( $dataset_id );
+	$org_id_d      = OpenData_Pa_Dataset::get_organization_id( $dataset_id );
+	$org_name      = $org_id_d && class_exists( 'OpenData_Pa_Organization' ) ? OpenData_Pa_Organization::get_name( $org_id_d ) : '';
+	$excerpt       = has_excerpt( $post_obj ) ? get_the_excerpt( $post_obj ) : wp_trim_words( $post_obj->post_content, 25 );
+	$format_badges = italiawp2_opendata_catalog_dataset_format_badges( $dataset_id );
+	$terms_list    = array();
+	if ( class_exists( 'OpenData_Pa_Groups' ) && taxonomy_exists( OpenData_Pa_Groups::TAXONOMY ) ) {
+		$terms_list = get_the_terms( $dataset_id, OpenData_Pa_Groups::TAXONOMY );
+		if ( is_wp_error( $terms_list ) || ! is_array( $terms_list ) ) {
+			$terms_list = array();
+		}
+	}
+
+	ob_start();
+	?>
+	<article class="opendata-catalog-item opendata-dataset-card card card-wrapper border-0 shadow-sm h-100">
+		<div class="card-body d-flex flex-column">
+			<h3 class="h5 card-title mb-2">
+				<a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a>
+			</h3>
+			<?php if ( $excerpt ) : ?>
+				<p class="card-text text-muted small mb-2"><?php echo esc_html( $excerpt ); ?></p>
+			<?php endif; ?>
+			<?php if ( $org_name ) : ?>
+				<p class="small mb-1"><?php esc_html_e( 'Pubblicato da:', 'italiawp2' ); ?> <?php echo esc_html( $org_name ); ?></p>
+			<?php endif; ?>
+			<p class="small text-muted mb-2"><?php esc_html_e( 'Data di ultima modifica:', 'italiawp2' ); ?> <?php echo esc_html( get_the_modified_date( 'Y-m-d', $post_obj ) ); ?></p>
+			<?php if ( ! empty( $format_badges ) ) : ?>
+				<div class="opendata-catalog-format-badges mb-2" aria-label="<?php esc_attr_e( 'Formati delle distribuzioni', 'italiawp2' ); ?>">
+					<?php foreach ( $format_badges as $fb ) : ?>
+						<span class="badge rounded-pill bg-success text-white opendata-format-badge"><?php echo esc_html( $fb ); ?></span>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+			<?php if ( ! empty( $terms_list ) ) : ?>
+				<div class="opendata-catalog-tags">
+					<?php foreach ( $terms_list as $t ) : ?>
+						<a href="<?php echo esc_url( get_term_link( $t ) ); ?>" class="btn btn-outline-primary btn-sm me-1 mb-1"><?php echo esc_html( $t->name ); ?></a>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+			<div class="opendata-dataset-card__footer mt-auto pt-2">
+				<a href="<?php echo esc_url( $permalink ); ?>" title="<?php echo esc_attr( sprintf( __( 'Go to the page', 'italiawp2' ) . ': %s', $title ) ); ?>" class="tutte">
+					<?php echo esc_html( italiawp2_opendata_loop_action_label( $dataset_id ) ); ?>
+					<svg class="icon">
+						<use xlink:href="<?php echo esc_url( get_template_directory_uri() ); ?>/static/img/ponmetroca.svg#ca-arrow_forward"></use>
+					</svg>
+				</a>
+			</div>
+		</div>
+	</article>
+	<?php
+	return ob_get_clean();
+}
+
+/**
  * HTML risultati (conteggio, lista card, paginazione o messaggio vuoto).
  *
  * @param WP_Query $query Query eseguita.
@@ -378,48 +531,9 @@ function italiawp2_opendata_catalog_results_html( $query, $p ) {
 			<?php
 			while ( $query->have_posts() ) :
 				$query->the_post();
-				$dataset_id = get_the_ID();
-				$org_id_d   = OpenData_Pa_Dataset::get_organization_id( $dataset_id );
-				$org_name   = $org_id_d ? OpenData_Pa_Organization::get_name( $org_id_d ) : '';
-				$excerpt    = has_excerpt() ? get_the_excerpt() : wp_trim_words( get_the_content(), 25 );
-				$format_badges = italiawp2_opendata_catalog_dataset_format_badges( $dataset_id );
-				$terms_list = array();
-				if ( class_exists( 'OpenData_Pa_Groups' ) && taxonomy_exists( OpenData_Pa_Groups::TAXONOMY ) ) {
-					$terms_list = get_the_terms( $dataset_id, OpenData_Pa_Groups::TAXONOMY );
-					if ( is_wp_error( $terms_list ) || ! is_array( $terms_list ) ) {
-						$terms_list = array();
-					}
-				}
-				?>
-				<article class="opendata-catalog-item card card-wrapper border-0 shadow-sm mb-3">
-					<div class="card-body">
-						<h3 class="h5 card-title mb-2">
-							<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-						</h3>
-						<?php if ( $excerpt ) : ?>
-							<p class="card-text text-muted small mb-2"><?php echo esc_html( $excerpt ); ?></p>
-						<?php endif; ?>
-						<?php if ( $org_name ) : ?>
-							<p class="small mb-1"><?php esc_html_e( 'Pubblicato da:', 'italiawp2' ); ?> <?php echo esc_html( $org_name ); ?></p>
-						<?php endif; ?>
-						<p class="small text-muted mb-2"><?php esc_html_e( 'Data di ultima modifica:', 'italiawp2' ); ?> <?php echo esc_html( get_the_modified_date( 'Y-m-d' ) ); ?></p>
-						<?php if ( ! empty( $format_badges ) ) : ?>
-							<div class="opendata-catalog-format-badges mb-2" aria-label="<?php esc_attr_e( 'Formati delle distribuzioni', 'italiawp2' ); ?>">
-								<?php foreach ( $format_badges as $fb ) : ?>
-									<span class="badge rounded-pill bg-success text-white opendata-format-badge"><?php echo esc_html( $fb ); ?></span>
-								<?php endforeach; ?>
-							</div>
-						<?php endif; ?>
-						<?php if ( ! empty( $terms_list ) ) : ?>
-							<div class="opendata-catalog-tags">
-								<?php foreach ( $terms_list as $t ) : ?>
-									<a href="<?php echo esc_url( get_term_link( $t ) ); ?>" class="btn btn-outline-primary btn-sm me-1 mb-1"><?php echo esc_html( $t->name ); ?></a>
-								<?php endforeach; ?>
-							</div>
-						<?php endif; ?>
-					</div>
-				</article>
-			<?php endwhile; ?>
+				echo italiawp2_opendata_dataset_card_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			endwhile;
+			?>
 		</div>
 
 		<?php
@@ -530,15 +644,22 @@ function italiawp2_enqueue_opendata_catalog_assets() {
 			'nonce'          => wp_create_nonce( 'italiawp2_catalog' ),
 			'loadingLabel'   => __( 'Caricamento risultati', 'italiawp2' ),
 			'searchDebounce' => 450,
+			'skeletonHtml'   => italiawp2_opendata_catalog_results_skeleton_html( 4 ),
+			'labels'         => array(
+				'search'       => __( 'Cerca', 'italiawp2' ),
+				'order'        => __( 'Ordina', 'italiawp2' ),
+				'org'          => __( 'Organizzazione', 'italiawp2' ),
+				'group'        => __( 'Tema', 'italiawp2' ),
+				'format'       => __( 'Formato', 'italiawp2' ),
+				'tag'          => __( 'Tag', 'italiawp2' ),
+				'removeFilter' => __( 'Rimuovi filtro', 'italiawp2' ),
+			),
+			'orderLabels'    => array(
+				'modified' => __( 'Data ultima modifica', 'italiawp2' ),
+				'date'     => __( 'Data pubblicazione', 'italiawp2' ),
+				'title'    => __( 'Titolo', 'italiawp2' ),
+			),
 		)
-	);
-
-	wp_add_inline_style(
-		'italiawp2-style',
-		'#opendata-catalog-results{position:relative;min-height:12rem}' .
-		'#opendata-catalog-results .opendata-catalog-loader-overlay{position:absolute;inset:0;z-index:2;display:none;align-items:center;justify-content:center;background:rgba(0,35,77,.45);border-radius:4px}' .
-		'#opendata-catalog-results.is-loading .opendata-catalog-loader-overlay{display:flex}' .
-		'#opendata-catalog-results.is-loading .opendata-catalog-results-inner{pointer-events:none;opacity:.35}'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'italiawp2_enqueue_opendata_catalog_assets', 25 );

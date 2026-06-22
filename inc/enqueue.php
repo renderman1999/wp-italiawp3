@@ -1,11 +1,10 @@
 <?php
 
 /**
- * Enqueue admin stylesheet
+ * Enqueue admin stylesheet (solo pagina Dettagli: vedi inc/details.php).
  */
 function italiawp2_admin_style() {
-    wp_register_style('italiawp2-admin-css', get_template_directory_uri() . '/inc/admin.css');
-    wp_enqueue_style('italiawp2-admin-css');
+	// Asset caricati in italiawp2_details_admin_assets() per toplevel_page_functions.
 }
 
 add_action('admin_enqueue_scripts', 'italiawp2_admin_style');
@@ -111,7 +110,7 @@ endif;
 add_action('wp_enqueue_scripts', 'italiawp2_theme_scripts'); // Add Theme admin scripts
 
 /**
- * Swiper per sezione Dataset in evidenza (solo in home se attiva)
+ * Swiper e AJAX per sezione Dataset in evidenza (solo home se attiva).
  */
 function italiawp2_enqueue_dataset_slider_assets() {
 	if ( ! is_front_page() || ! get_theme_mod( 'active_section_dataset_slider', true ) ) {
@@ -120,10 +119,7 @@ function italiawp2_enqueue_dataset_slider_assets() {
 	if ( ! class_exists( 'OpenData_Pa_Dataset' ) || ! method_exists( 'OpenData_Pa_Dataset', 'get_featured_for_slider' ) ) {
 		return;
 	}
-	$datasets = OpenData_Pa_Dataset::get_featured_for_slider( 1 );
-	if ( empty( $datasets ) ) {
-		return;
-	}
+
 	wp_enqueue_style(
 		'swiper-bundle',
 		'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
@@ -137,27 +133,21 @@ function italiawp2_enqueue_dataset_slider_assets() {
 		'11',
 		true
 	);
-	wp_add_inline_script( 'swiper-bundle', "
-		document.addEventListener('DOMContentLoaded', function() {
-			var el = document.querySelector('.dataset-swiper');
-			if (el && typeof Swiper !== 'undefined') {
-				new Swiper('.dataset-swiper', {
-					slidesPerView: 1,
-					spaceBetween: 16,
-					loop: true,
-					pagination: { el: '.dataset-swiper .swiper-pagination', clickable: true },
-					navigation: {
-						nextEl: '.dataset-swiper .swiper-button-next',
-						prevEl: '.dataset-swiper .swiper-button-prev'
-					},
-					breakpoints: {
-						640: { slidesPerView: 2 },
-						1024: { slidesPerView: 3 }
-					}
-				});
-			}
-		});
-	", 'after' );
+	wp_enqueue_script(
+		'italiawp2-dataset-slider',
+		get_template_directory_uri() . '/inc/dataset-slider.js',
+		array( 'swiper-bundle' ),
+		wp_get_theme()->get( 'Version' ),
+		true
+	);
+	wp_localize_script(
+		'italiawp2-dataset-slider',
+		'italiawp2DatasetSlider',
+		array(
+			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( 'italiawp2_dataset_slider' ),
+		)
+	);
 }
 add_action( 'wp_enqueue_scripts', 'italiawp2_enqueue_dataset_slider_assets', 20 );
 
